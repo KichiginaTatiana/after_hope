@@ -17,6 +17,8 @@ namespace AfterHope.Configuration
             commandSyntax.DefineCommand<DownloadCardCommandExecutor>("downloadcard", "downloadcard");
             commandSyntax.DefineCommand<DownloadPosterCommandExecutor>("downloadposter", "downloadposter");
             commandSyntax.DefineCommand<AddCommandExecutor>("add", "add");
+            commandSyntax.DefineCommand<SendLetterCommandExecutor>("letter", "letter");
+            commandSyntax.DefineCommand<ProcessLetterCommandExecutor>("process", "process");
             return commandSyntax;
         }
     }

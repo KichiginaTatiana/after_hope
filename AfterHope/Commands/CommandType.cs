@@ -10,6 +10,8 @@ namespace AfterHope.Commands
         DownloadList,
         DownloadPoster,
         Add,
+        SendLetter,
+        ProcessLetter,
         Help
     }
 }

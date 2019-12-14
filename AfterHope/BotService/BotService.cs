@@ -123,15 +123,20 @@ namespace AfterHope.BotService
 
         private async Task SendResponse(CommandResult commandResult, Message message)
         {
+            var chatId = commandResult.ChatId ?? message.Chat.Id;
+
+            if (commandResult.AdditionalMessage != null)
+                await SendResponse(commandResult.AdditionalMessage, message);
+
             if (commandResult.IsDocumentResult)
-                await bot.SendDocumentAsync(message.Chat.Id,
+                await bot.SendDocumentAsync(chatId,
                     new InputMedia(new MemoryStream(commandResult.FileContent), commandResult.FileName));
             else if (commandResult.IsPhotoResult)
-                await bot.SendPhotoAsync(message.Chat.Id, new InputMedia(commandResult.PhotoId),
+                await bot.SendPhotoAsync(chatId, new InputMedia(commandResult.PhotoId),
                     commandResult.Success ? commandResult.Response : commandResult.ErrorMessage);
             else
                 await bot.SendTextMessageAsync(
-                    message.Chat.Id,
+                    chatId,
                     commandResult.Success ? commandResult.Response : commandResult.ErrorMessage,
                     commandResult.UseMarkdown ? ParseMode.Markdown : ParseMode.Default,
                     replyMarkup: inlineKeyboardMarkupBuilder.Build(commandResult.InlineMenu));

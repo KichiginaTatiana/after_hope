@@ -40,6 +40,12 @@ namespace AfterHope.Commands.Parser
                 case "add":
                     commandType = CommandType.Add;
                     break;
+                case "letter":
+                    commandType = CommandType.SendLetter;
+                    break;
+                case "process":
+                    commandType = CommandType.ProcessLetter;
+                    break;
                 default:
                     commandType = CommandType.Unknown;
                     break;

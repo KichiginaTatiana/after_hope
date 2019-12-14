@@ -27,9 +27,13 @@ namespace AfterHope.Commands
 
         public bool IsPhotoResult => PhotoId != null;
 
+        public long? ChatId { get; set; }
+
+        public CommandResult AdditionalMessage { get; set; }
+
         public static CommandResult AsSucceed(string response = null, bool useMarkdown = false,
             InlineMenu inlineMenu = null, bool update = false, byte[] fileContent = null, string fileName = null,
-            string photoId = null) =>
+            string photoId = null, long? chatId = null) =>
             new CommandResult
             {
                 Success = true,
@@ -39,7 +43,8 @@ namespace AfterHope.Commands
                 UpdatePreviousMessage = update,
                 FileContent = fileContent,
                 FileName = fileName,
-                PhotoId = photoId
+                PhotoId = photoId,
+                ChatId = chatId
             };
 
         public static CommandResult AsFailed(string message, InlineMenu inlineMenu = null, bool update = false) =>

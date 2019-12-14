@@ -33,7 +33,8 @@ namespace AfterHope.Commands.Executors
         }
 
         private static string GetPersonString(Person person) =>
-            $"{person.Name}\n{person.Lawsuit}\n{person.Address}\n{person.Birthday}\n{person.Info}\n{person.Type}\n{person.Status}";
+            $"{person.Name}\n{person.Lawsuit}\n{person.Address}\n{person.Birthday}\n{person.Info}\n{person.Type}\n{person.Status}" +
+            $"\n\nНаписать письмо /letter_{person.Id} <текст письма>";
 
         protected InlineMenu CreateMenu(ICommandSyntax commandSyntax, string personId)
         {
