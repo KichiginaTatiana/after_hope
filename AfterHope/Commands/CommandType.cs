@@ -6,6 +6,9 @@ namespace AfterHope.Commands
         Organize,
         Find,
         Show,
+        DownloadCard,
+        DownloadList,
+        DownloadPoster,
         Help
     }
 }

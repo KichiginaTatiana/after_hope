@@ -29,16 +29,5 @@ namespace AfterHope.Commands.Executors
             builder.AddRow().WithCell("В начало", beginCommandName);
             return builder.Create();
         }
-
-        protected InlineMenu CreateCommonMenu(ICommandSyntax commandSyntax)
-        {
-            var startCommandName = commandSyntax.GetCommandName<DefaultStartSuperCommandExecutor>();
-            var findCommandName = commandSyntax.GetCommandName<FindCommandExecutor>();
-
-            var builder = InlineMenu.Build();
-            builder.AddRow().WithCell("Найти другого пзк", findCommandName);
-            builder.AddRow().WithCell("В начало", startCommandName);
-            return builder.Create();
-        }
     }
 }

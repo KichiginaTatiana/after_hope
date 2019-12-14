@@ -28,6 +28,15 @@ namespace AfterHope.Commands.Parser
                 case "show":
                     commandType = CommandType.Show;
                     break;
+                case "downloadcard":
+                    commandType = CommandType.DownloadCard;
+                    break;
+                case "downloadlist":
+                    commandType = CommandType.DownloadList;
+                    break;
+                case "downloadposter":
+                    commandType = CommandType.DownloadPoster;
+                    break;
                 default:
                     commandType = CommandType.Unknown;
                     break;

@@ -6,7 +6,7 @@ namespace AfterHope.Commands.Executors
     public class DefaultStartSuperCommandExecutor : ISuperCommandExecutor
     {
         public CommandResult Execute(Command command, CommandMeta meta, ICommandSyntax syntax) =>
-            CommandResult.AsSucceed("Вы хотите организовать письма пзк или узнать об одном из них?",
+            CommandResult.AsSucceed("Вы хотите организовать вечер писем узникам совести или написать одному из них?",
                 inlineMenu: CreateMenu(syntax),
                 update: meta.FromInlineMenu);
 

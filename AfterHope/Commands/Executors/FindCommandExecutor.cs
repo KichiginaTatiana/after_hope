@@ -26,7 +26,7 @@ namespace AfterHope.Commands.Executors
         }
 
         private CommandResult Start(CommandMeta meta, ICommandSyntax syntax) =>
-            CommandResult.AsSucceed("Отправь боту фамилию пзк или смотри список по делам",
+            CommandResult.AsSucceed("Отправь боту фамилию узника совести или смотри список по делам",
                 inlineMenu: CreateLawsuitsMenu(syntax, GetLawsuits(meta)),
                 update: meta.FromInlineMenu);
 
@@ -36,16 +36,18 @@ namespace AfterHope.Commands.Executors
             var persons = PersonRepository.Select(query);
             var personsString = string.Join("\n", persons.Select((p, i) => $"{i + 1}. {p.Name} /show_{p.Id}"));
             return CommandResult.AsSucceed($"Найдено {persons.Count}:\n{personsString}",
-                inlineMenu: CreateCommonMenu(syntax));
+                inlineMenu: CreateMenu(syntax));
         }
 
-        private static InlineMenu CreateCommonMenu(ICommandSyntax commandSyntax)
+        private static InlineMenu CreateMenu(ICommandSyntax commandSyntax)
         {
             var startCommandName = commandSyntax.GetCommandName<DefaultStartSuperCommandExecutor>();
             var findCommandName = commandSyntax.GetCommandName<FindCommandExecutor>();
+            var downloadPosterCommandName = commandSyntax.GetCommandName<DownloadPosterCommandExecutor>();
 
             var builder = InlineMenu.Build();
-            builder.AddRow().WithCell("Найти другого пзк", findCommandName);
+            builder.AddRow().WithCell("Найти другого узника совести", findCommandName);
+            builder.AddRow().WithCell("Скачать плакат для печати", downloadPosterCommandName);
             builder.AddRow().WithCell("В начало", startCommandName);
             return builder.Create();
         }

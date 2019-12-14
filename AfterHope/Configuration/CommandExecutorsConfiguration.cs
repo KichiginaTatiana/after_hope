@@ -13,6 +13,9 @@ namespace AfterHope.Configuration
             commandSyntax.DefineCommand<FindCommandExecutor>("find", "найти пзк");
             commandSyntax.DefineCommand<DefaultStartSuperCommandExecutor>("start", "start");
             commandSyntax.DefineCommand<ShowCommandExecutor>("show", "show");
+            commandSyntax.DefineCommand<DownloadListCommandExecutor>("downloadlist", "downloadlist");
+            commandSyntax.DefineCommand<DownloadCardCommandExecutor>("downloadcard", "downloadcard");
+            commandSyntax.DefineCommand<DownloadPosterCommandExecutor>("downloadposter", "downloadposter");
             return commandSyntax;
         }
     }
