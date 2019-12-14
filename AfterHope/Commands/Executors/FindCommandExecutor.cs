@@ -26,15 +26,20 @@ namespace AfterHope.Commands.Executors
         }
 
         private CommandResult Start(CommandMeta meta, ICommandSyntax syntax) =>
-            CommandResult.AsSucceed("Отправь боту фамилию узника совести или смотри список по делам",
+            CommandResult.AsSucceed("Отправьте боту фамилию узника совести или смотри список по делам",
                 inlineMenu: CreateLawsuitsMenu(syntax, GetLawsuits(meta)),
                 update: meta.FromInlineMenu);
 
         private CommandResult ShowList(Command command, CommandMeta meta, ICommandSyntax syntax)
         {
             var query = command.Args[0];
-            var persons = PersonRepository.Select(query);
+            var persons = query == "all"
+                ? PersonRepository.ReadAll()
+                : PersonRepository.Select(query).Concat(PersonRepository.SelectByLawsuit(query)).GroupBy(x => x.Id)
+                    .Select(x => x.First()).ToList();
+
             var personsString = string.Join("\n", persons.Select((p, i) => $"{i + 1}. {p.Name} /show_{p.Id}"));
+
             return CommandResult.AsSucceed($"Найдено {persons.Count}:\n{personsString}",
                 inlineMenu: CreateMenu(syntax));
         }

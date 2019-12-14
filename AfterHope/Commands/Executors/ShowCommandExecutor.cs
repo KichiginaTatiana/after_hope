@@ -2,6 +2,7 @@
 using AfterHope.Commands.Menus.Inline;
 using AfterHope.Commands.Parsing.Syntax;
 using AfterHope.Data;
+using AfterHope.Data.Models;
 
 namespace AfterHope.Commands.Executors
 {
@@ -25,8 +26,11 @@ namespace AfterHope.Commands.Executors
         private CommandResult ShowOne(Command command, CommandMeta meta, ICommandSyntax syntax)
         {
             var person = PersonRepository.Read(command.Args[0]);
-            return CommandResult.AsSucceed($"{person.Name}", inlineMenu: CreateMenu(syntax), update: true);
+            return CommandResult.AsSucceed(GetPersonString(person), inlineMenu: CreateMenu(syntax), update: true);
         }
+
+        private static string GetPersonString(Person person) =>
+            $"{person.Name}\n{person.Lawsuit}\n{person.Address}\n{person.Birthday}\n{person.Info}\n{person.Type}\n{person.Status}";
 
         protected InlineMenu CreateMenu(ICommandSyntax commandSyntax)
         {

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using AfterHope.Commands.Menus.Inline;
 
@@ -23,8 +24,13 @@ namespace AfterHope.Commands
 
         public string FileName { get; set; }
 
+        public string PhotoId { get; set; }
+
+        public bool IsPhotoResult => PhotoId != null;
+
         public static CommandResult AsSucceed(string response = null, bool useMarkdown = false,
-            InlineMenu inlineMenu = null, bool update = false, byte[] fileContent = null, string fileName = null) =>
+            InlineMenu inlineMenu = null, bool update = false, byte[] fileContent = null, string fileName = null,
+            string photoId = null) =>
             new CommandResult
             {
                 Success = true,
@@ -33,7 +39,8 @@ namespace AfterHope.Commands
                 InlineMenu = inlineMenu,
                 UpdatePreviousMessage = update,
                 FileContent = fileContent,
-                FileName = fileName
+                FileName = fileName,
+                PhotoId = photoId
             };
 
         public static CommandResult AsFailed(string message, InlineMenu inlineMenu = null, bool update = false) =>

@@ -21,7 +21,7 @@ namespace AfterHope.Exporting.Models
         public string Info { get; set; }
 
         [Name("День рождения")]
-        public DateTime Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
 
         [Name("Статус")]
         public string Status { get; set; }

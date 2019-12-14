@@ -37,6 +37,9 @@ namespace AfterHope.Commands.Parser
                 case "downloadposter":
                     commandType = CommandType.DownloadPoster;
                     break;
+                case "add":
+                    commandType = CommandType.Add;
+                    break;
                 default:
                     commandType = CommandType.Unknown;
                     break;

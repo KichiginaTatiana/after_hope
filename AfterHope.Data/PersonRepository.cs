@@ -28,32 +28,12 @@ namespace AfterHope.Data
 
         public void Delete(string id) => repository.Delete<Person>(x => x.Id == id);
 
-        public Person Read(string id) => new Person
-        {
-            Name = "Name 1",
-            Id = "1"
-        };
-        //repository.FirstOrDefault<Person>(x => x.Id == id);
+        public Person Read(string id) => repository.FirstOrDefault<Person>(x => x.Id == id);
 
-        public List<Person> Select(string query) => ReadAll();
-        // repository.Fetch<Person>(x => x.Name.Contains(query));
+        public List<Person> Select(string query) => repository.Fetch<Person>(x => x.Name.ToLower().Contains(query.ToLower()));
 
-        public List<Person> SelectByLawsuit(string lawsuit) => ReadAll();
-        //repository.Fetch<Person>(x => x.Lawsuit.Contains(query));
+        public List<Person> SelectByLawsuit(string lawsuit) => repository.Fetch<Person>(x => x.Lawsuit.Contains(lawsuit));
 
-        public List<Person> ReadAll() => new List<Person>()
-        {
-            new Person
-            {
-                Name = "Name 1",
-                Id = "1"
-            },
-            new Person
-            {
-                Name = "Name 2",
-                Id = "2"
-            }
-        };
-        //repository.Fetch<Person>();
+        public List<Person> ReadAll() => repository.Fetch<Person>();
     }
 }

@@ -20,8 +20,10 @@ namespace AfterHope.Data.Models
 
         public string Info { get; set; }
 
-        public DateTime Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
 
         public string Status { get; set; }
+
+        public string PhotoId { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace AfterHope.Commands
         DownloadCard,
         DownloadList,
         DownloadPoster,
+        Add,
         Help
     }
 }

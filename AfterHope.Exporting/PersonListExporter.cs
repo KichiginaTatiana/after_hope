@@ -21,7 +21,7 @@ namespace AfterHope.Exporting
 
         public byte[] Export(string lawsuit)
         {
-            var persons = (lawsuit == "all"
+            var persons = (lawsuit == null
                 ? personRepository.ReadAll()
                 : personRepository.SelectByLawsuit(lawsuit)).Select(Mapper.Map<Models.Person>);
 

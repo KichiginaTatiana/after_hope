@@ -15,8 +15,8 @@ namespace AfterHope.Commands.Executors
             this.PersonRepository = personRepository;
         }
 
-        protected IEnumerable<string> GetLawsuits(CommandMeta meta) => new[] {"Московское", "Ингушское", "Иеговисты"};
-        // PersonRepository.ReadAll().GroupBy(x => x.Lawsuit).Select(x => x.Key);
+        protected IEnumerable<string> GetLawsuits(CommandMeta meta) =>
+            PersonRepository.ReadAll().GroupBy(x => x.Lawsuit).Select(x => x.Key);
 
         protected InlineMenu CreateLawsuitsMenu(ICommandSyntax syntax, IEnumerable<string> lawsuits)
         {

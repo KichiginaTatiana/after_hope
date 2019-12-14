@@ -16,8 +16,10 @@ namespace AfterHope.Commands.Executors
 
         public CommandResult Execute(Command command, CommandMeta meta, ICommandSyntax syntax)
         {
-            var export = exporter.Export(command.Args[0]);
-            return CommandResult.AsSucceed(string.Empty, fileContent: export, fileName: $"{command.Args[0]}.csv");
+            var exportAll = command.Args[0] == "all";
+            var export = exporter.Export(exportAll ? null : command.Args[0]);
+            var fileName = exportAll ? "Все" : command.Args[0];
+            return CommandResult.AsSucceed(string.Empty, fileContent: export, fileName: $"{fileName}.csv");
         }
 
         public bool AppliesTo(CommandType commandType) => commandType == CommandType.DownloadList;

@@ -16,6 +16,8 @@ namespace AfterHope.BotService
         private readonly ICommandManager commandManager;
         private readonly IInlineKeyboardMarkupBuilder inlineKeyboardMarkupBuilder;
 
+        private const long AdminChatId = -350634383;
+
         public BotService(
             IBotSettings settings,
             ICommandManager commandManager,
@@ -34,20 +36,11 @@ namespace AfterHope.BotService
             bot.OnCallbackQuery += OnBotOnCallbackQueryReceived;
         }
 
-        public void Start()
-        {
-            bot.StartReceiving();
-        }
+        public void Start() => bot.StartReceiving();
 
-        public void Stop()
-        {
-            bot.StopReceiving();
-        }
-        
-        public async Task Ping()
-        {
-            var me = await bot.GetMeAsync();
-        }
+        public void Stop() => bot.StopReceiving();
+
+        public async Task Ping() => await bot.GetMeAsync();
 
         private async void OnBotOnCallbackQueryReceived(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
         {
@@ -56,29 +49,17 @@ namespace AfterHope.BotService
             try
             {
                 await bot.AnswerCallbackQueryAsync(callbackQuery.Id);
-                var commandResult = commandManager.Execute(callbackQuery.Data, BuildScope(callbackQuery.From, true));
+                var commandResult = commandManager.Execute(callbackQuery.Data, BuildScope(callbackQuery.Message, callbackQuery.From, true));
+
                 if (commandResult.UpdatePreviousMessage)
-                {
                     await bot.EditMessageTextAsync(
                         callbackQuery.Message.Chat.Id,
                         callbackQuery.Message.MessageId,
                         commandResult.Success ? commandResult.Response : commandResult.ErrorMessage,
                         commandResult.UseMarkdown ? ParseMode.Markdown : ParseMode.Default,
                         replyMarkup: inlineKeyboardMarkupBuilder.Build(commandResult.InlineMenu));
-                }
                 else
-                {
-                    if (commandResult.IsDocumentResult)
-                        await bot.SendDocumentAsync(callbackQuery.Message.Chat.Id,
-                            new InputMedia(new MemoryStream(commandResult.FileContent), commandResult.FileName));
-                    else
-                        await bot.SendTextMessageAsync(
-                            callbackQuery.Message.Chat.Id,
-                            commandResult.Success ? commandResult.Response : commandResult.ErrorMessage,
-                            commandResult.UseMarkdown ? ParseMode.Markdown : ParseMode.Default,
-                            replyMarkup: inlineKeyboardMarkupBuilder.Build(commandResult.InlineMenu)
-                        );
-                }
+                    await SendResponse(commandResult, callbackQuery.Message);
             }
             catch (Exception e)
             {
@@ -86,16 +67,16 @@ namespace AfterHope.BotService
             }
         }
 
-        private static CommandMeta BuildScope(User sender, bool inlineMenu = false)
-        {
-            return new CommandMeta
+        private static CommandMeta BuildScope(Message message, User sender, bool inlineMenu = false) =>
+            new CommandMeta
             {
                 UserId = sender.Id.ToString(),
                 UserName = sender.FirstName,
                 NickName = sender.Username,
                 FromInlineMenu = inlineMenu,
+                PhotoId = message.Type == MessageType.Photo ? message.Photo[0].FileId : null,
+                MessageText = message.Type == MessageType.Photo ? message.Caption : message.Text
             };
-        }
 
         private async void OnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
@@ -105,31 +86,57 @@ namespace AfterHope.BotService
 
         private async Task ExecuteCommand(MessageEventArgs messageEventArgs, Message message)
         {
-            if (message?.Type == MessageType.Text)
+            if (message?.Type == MessageType.Text && message.Chat.Type == ChatType.Private)
             {
-                var commandMeta = BuildScope(messageEventArgs.Message.From);
-                try
-                {
-                    var commandResult = commandManager.Execute(message.Text, commandMeta);
-
-                    if (commandResult.IsDocumentResult)
-                        await bot.SendDocumentAsync(message.Chat.Id,
-                            new InputMedia(new MemoryStream(commandResult.FileContent), commandResult.FileName));
-                    else
-                        await bot.SendTextMessageAsync(
-                            message.Chat.Id,
-                            commandResult.Success ? commandResult.Response : commandResult.ErrorMessage,
-                            commandResult.UseMarkdown ? ParseMode.Markdown : ParseMode.Default,
-                            replyMarkup: inlineKeyboardMarkupBuilder.Build(commandResult.InlineMenu));
-                }
-                catch (Exception e)
-                {
-                    await bot.SendTextMessageAsync(
-                        message.Chat.Id,
-                        "Oooops! Something went horribly terribly awfully wrong!"
-                    );
-                }
+            var commandMeta = BuildScope(messageEventArgs.Message, messageEventArgs.Message.From);
+                await ExecutePrivateConversationCommands(commandMeta, message);
             }
+
+            if ((message?.Type == MessageType.Text || message?.Type == MessageType.Photo) &&
+                (message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup)
+                && message.Chat.Id == AdminChatId)
+            {
+                await AddPerson(messageEventArgs, message);
+            }
+        }
+
+        private async Task AddPerson(MessageEventArgs messageEventArgs, Message message)
+        {
+            var commandMeta = BuildScope(messageEventArgs.Message, messageEventArgs.Message.From);
+            message.Text = "/add";
+            await ExecutePrivateConversationCommands(commandMeta, message);
+        }
+
+        private async Task ExecutePrivateConversationCommands(CommandMeta commandMeta, Message message)
+        {
+            try
+            {
+                var commandResult = commandManager.Execute(message.Text, commandMeta);
+                await SendResponse(commandResult, message);
+            }
+            catch (Exception e)
+            {
+                await bot.SendTextMessageAsync(
+                    message.Chat.Id,
+                    "Oooops! Something went horribly terribly awfully wrong!"
+                );
+            }
+        }
+
+        private async Task SendResponse(CommandResult commandResult, Message message)
+        {
+            if (commandResult.IsDocumentResult)
+                await bot.SendDocumentAsync(message.Chat.Id,
+                    new InputMedia(new MemoryStream(commandResult.FileContent), commandResult.FileName));
+            else if (commandResult.IsPhotoResult)
+                await bot.SendPhotoAsync(message.Chat.Id, new InputMedia(commandResult.PhotoId),
+                    commandResult.Success ? commandResult.Response : commandResult.ErrorMessage);
+            else
+                await bot.SendTextMessageAsync(
+                    message.Chat.Id,
+                    commandResult.Success ? commandResult.Response : commandResult.ErrorMessage,
+                    commandResult.UseMarkdown ? ParseMode.Markdown : ParseMode.Default,
+                    replyMarkup: inlineKeyboardMarkupBuilder.Build(commandResult.InlineMenu));
         }
     }
 }
