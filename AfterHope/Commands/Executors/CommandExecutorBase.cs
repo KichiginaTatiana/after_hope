@@ -33,10 +33,12 @@ namespace AfterHope.Commands.Executors
             var beginCommandName = syntax.GetCommandName<DefaultStartSuperCommandExecutor>();
             var builder = InlineMenu.Build();
             foreach (var lawsuit in lawsuits.OrderBy(x => x))
-                builder.AddRow().WithCell(lawsuit, commandName, lawsuit);
+                builder.AddRow().WithCell(lawsuit, commandName, CreateCommandArg(lawsuit));
             builder.AddRow().WithCell("Все", commandName, "all");
             builder.AddRow().WithCell("В начало", beginCommandName);
             return builder.Create();
         }
+
+        private static string CreateCommandArg(string x) => x.Length > 15 ? x.Substring(0, 15) : x;
     }
 }

@@ -16,7 +16,7 @@ namespace AfterHope.Data.Parsers
         public Person Parse(string data, string photoId)
         {
             var strings = data.Split("\n");
-            if (strings.Length < 3)
+            if (strings.Length < 2)
                 throw new ArgumentException();
 
             var id = ((uint) strings[0].GetHashCode()).ToString();
@@ -28,7 +28,7 @@ namespace AfterHope.Data.Parsers
                 Id = id,
                 Name = strings[0],
                 Lawsuit = strings[1],
-                Address = strings[2],
+                Address = strings.Length > 2 ? strings[2] : null,
                 Birthday = strings.Length > 3 ? DateTime.Parse(strings[3]) : null as DateTime?,
                 Info = strings.Length > 4 ? strings[4] : null,
                 Type = strings.Length > 5 ? strings[5] : null,

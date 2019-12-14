@@ -25,5 +25,11 @@ namespace AfterHope.Data.Models
         public string Status { get; set; }
 
         public string PhotoId { get; set; }
+
+        public string Interests { get; set; }
+
+        public DateTime? FreeDate { get; set; }
+
+        public string News { get; set; }
     }
 }
