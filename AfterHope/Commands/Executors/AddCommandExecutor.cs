@@ -24,6 +24,7 @@ namespace AfterHope.Commands.Executors
             {
                 var person = personParser.Parse(command.Args[0], meta.PhotoId);
                 PersonRepository.Write(person);
+                return CommandResult.AsSucceed("Карточка добавлена");
             }
             catch
             {
@@ -31,6 +32,7 @@ namespace AfterHope.Commands.Executors
                 {
                     var poster = posterParser.Parse(command.Args[0], meta.PhotoId);
                     PosterRepository.Write(poster);
+                    return CommandResult.AsSucceed("Плакат добавлен");
                 }
                 catch
                 {
@@ -38,8 +40,6 @@ namespace AfterHope.Commands.Executors
                         "Ожидаемый формат карточки:\n\n[Фото]\nФИО\nДело\nАдрес\n[День рождения]\n[Информация]\n[Тип]\n[Статус]\n\nОжидаемый формат плаката:\n\nФото\nФИО|Дело");
                 }
             }
-
-            return CommandResult.AsSucceed("Добавлено");
         }
 
         public bool AppliesTo(CommandType commandType) => commandType == CommandType.Add;
