@@ -7,6 +7,5 @@ namespace AfterHope.Commands
         public string UserName { get; set; }
         public bool FromInlineMenu { get; set; }
         public string PhotoId { get; set; }
-        public string MessageText { get; set; }
     }
 }

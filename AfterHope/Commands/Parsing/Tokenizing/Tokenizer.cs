@@ -7,7 +7,7 @@ namespace AfterHope.Commands.Parsing.Tokenizing
     {
         public Tokens Tokenize(string commandLine)
         {
-            var commandParts = commandLine.Split(new[] {' ', '_'}, StringSplitOptions.RemoveEmptyEntries);
+            var commandParts = commandLine.Split(new[] {' ', '_'}, 2, StringSplitOptions.RemoveEmptyEntries);
 
             if (!commandParts[0].StartsWith("/"))
                 throw new CanNotFindCommandNameTokenException(commandLine);

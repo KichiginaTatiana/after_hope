@@ -19,7 +19,7 @@ namespace AfterHope.Commands.Executors
             Person person;
             try
             {
-                person = parser.Parse(meta.MessageText, meta.PhotoId);
+                person = parser.Parse(command.Args[0], meta.PhotoId);
             }
             catch
             {

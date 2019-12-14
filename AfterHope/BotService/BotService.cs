@@ -74,8 +74,7 @@ namespace AfterHope.BotService
                 UserName = sender.FirstName,
                 NickName = sender.Username,
                 FromInlineMenu = inlineMenu,
-                PhotoId = message.Type == MessageType.Photo ? message.Photo[0].FileId : null,
-                MessageText = message.Type == MessageType.Photo ? message.Caption : message.Text
+                PhotoId = message.Type == MessageType.Photo ? message.Photo[0].FileId : null
             };
 
         private async void OnMessageReceived(object sender, MessageEventArgs messageEventArgs)
@@ -88,8 +87,7 @@ namespace AfterHope.BotService
         {
             if (message?.Type == MessageType.Text && message.Chat.Type == ChatType.Private)
             {
-            var commandMeta = BuildScope(messageEventArgs.Message, messageEventArgs.Message.From);
-                await ExecutePrivateConversationCommands(commandMeta, message);
+                await ExecutePrivateConversationCommands(messageEventArgs, message);
             }
 
             if ((message?.Type == MessageType.Text || message?.Type == MessageType.Photo) &&
@@ -102,15 +100,15 @@ namespace AfterHope.BotService
 
         private async Task AddPerson(MessageEventArgs messageEventArgs, Message message)
         {
-            var commandMeta = BuildScope(messageEventArgs.Message, messageEventArgs.Message.From);
-            message.Text = "/add";
-            await ExecutePrivateConversationCommands(commandMeta, message);
+            message.Text = "/add " + message.Text;
+            await ExecutePrivateConversationCommands(messageEventArgs, message);
         }
 
-        private async Task ExecutePrivateConversationCommands(CommandMeta commandMeta, Message message)
+        private async Task ExecutePrivateConversationCommands(MessageEventArgs messageEventArgs, Message message)
         {
             try
             {
+                var commandMeta = BuildScope(messageEventArgs.Message, messageEventArgs.Message.From);
                 var commandResult = commandManager.Execute(message.Text, commandMeta);
                 await SendResponse(commandResult, message);
             }
