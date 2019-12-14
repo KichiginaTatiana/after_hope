@@ -1,8 +1,10 @@
+using System;
+
 namespace AfterHope.BotService
 {
     public class BotSettings : IBotSettings
     {
-        public string Token => "717788818:AAG0h_3NvX0p_l8gJE8rVNRO6shXlngl48M";
+        public string Token => throw new NotImplementedException();
 
         public string ProxyHostName => "130.185.79.95";
 
