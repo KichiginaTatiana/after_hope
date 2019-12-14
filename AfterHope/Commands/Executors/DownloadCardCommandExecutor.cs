@@ -5,7 +5,8 @@ namespace AfterHope.Commands.Executors
 {
     public class DownloadCardCommandExecutor : CommandExecutorBase, ICommandExecutor
     {
-        public DownloadCardCommandExecutor(IPersonRepository personRepository) : base(personRepository)
+        public DownloadCardCommandExecutor(IPersonRepository personRepository,
+            IPosterRepository posterRepository) : base(personRepository, posterRepository)
         {
         }
 

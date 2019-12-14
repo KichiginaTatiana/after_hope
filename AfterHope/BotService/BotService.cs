@@ -27,7 +27,7 @@ namespace AfterHope.BotService
             this.inlineKeyboardMarkupBuilder = inlineKeyboardMarkupBuilder;
 
             bot = settings.UseProxy
-                ? new TelegramBotClient(settings.Token, new HttpToSocks5Proxy(settings.ProxyHostName, settings.ProxyPort))
+                ? new TelegramBotClient(settings.Token, new HttpToSocks5Proxy(settings.ProxyHostName, settings.ProxyPort){ResolveHostnamesLocally = true})
                 : new TelegramBotClient(settings.Token);
 
             bot.OnMessage += OnMessageReceived;
@@ -100,7 +100,7 @@ namespace AfterHope.BotService
 
         private async Task AddPerson(MessageEventArgs messageEventArgs, Message message)
         {
-            message.Text = "/add " + message.Text;
+            message.Text = "/add " + (message.Type == MessageType.Photo ? message.Caption : message.Text);
             await ExecutePrivateConversationCommands(messageEventArgs, message);
         }
 

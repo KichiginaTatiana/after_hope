@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AfterHope.Commands.Menus.Inline;
 using AfterHope.Commands.Parsing.Syntax;
 using AfterHope.Data.Models;
@@ -8,7 +9,8 @@ namespace AfterHope.Commands.Executors
 {
     public class ShowCommandExecutor : CommandExecutorBase, ICommandExecutor
     {
-        public ShowCommandExecutor(IPersonRepository personRepository) : base(personRepository)
+        public ShowCommandExecutor(IPersonRepository personRepository, 
+            IPosterRepository posterRepository) : base(personRepository, posterRepository)
         {
         }
 
@@ -25,24 +27,28 @@ namespace AfterHope.Commands.Executors
 
         private CommandResult ShowOne(Command command, CommandMeta meta, ICommandSyntax syntax)
         {
-            var person = PersonRepository.Read(command.Args[0]);
-            return CommandResult.AsSucceed(GetPersonString(person), inlineMenu: CreateMenu(syntax), update: true);
+            var personId = command.Args[0];
+            var person = PersonRepository.Read(personId);
+            return CommandResult.AsSucceed(GetPersonString(person), inlineMenu: CreateMenu(syntax, personId), update: true);
         }
 
         private static string GetPersonString(Person person) =>
             $"{person.Name}\n{person.Lawsuit}\n{person.Address}\n{person.Birthday}\n{person.Info}\n{person.Type}\n{person.Status}";
 
-        protected InlineMenu CreateMenu(ICommandSyntax commandSyntax)
+        protected InlineMenu CreateMenu(ICommandSyntax commandSyntax, string personId)
         {
             var startCommandName = commandSyntax.GetCommandName<DefaultStartSuperCommandExecutor>();
             var findCommandName = commandSyntax.GetCommandName<FindCommandExecutor>();
             var downloadCardCommandName = commandSyntax.GetCommandName<DownloadCardCommandExecutor>();
             var downloadPosterCommandName = commandSyntax.GetCommandName<DownloadPosterCommandExecutor>();
 
+            var personPosters = GetPersonPosters(personId).ToArray();
+
             var builder = InlineMenu.Build();
             builder.AddRow().WithCell("Найти другого узника совести", findCommandName);
             builder.AddRow().WithCell("Скачать карточку для печати", downloadCardCommandName);
-            builder.AddRow().WithCell("Скачать плакат для печати", downloadPosterCommandName);
+            if (personPosters.Any())
+                builder.AddRow().WithCell("Скачать плакат для печати", downloadPosterCommandName, personPosters[0]);
             builder.AddRow().WithCell("В начало", startCommandName);
             return builder.Create();
         }

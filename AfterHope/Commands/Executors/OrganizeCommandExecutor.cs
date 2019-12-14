@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AfterHope.Commands.Menus.Inline;
 using AfterHope.Commands.Parsing.Syntax;
 using AfterHope.Data.Repositories;
@@ -7,7 +8,8 @@ namespace AfterHope.Commands.Executors
 {
     public class OrganizeCommandExecutor : CommandExecutorBase, ICommandExecutor
     {
-        public OrganizeCommandExecutor(IPersonRepository personRepository) : base(personRepository)
+        public OrganizeCommandExecutor(IPersonRepository personRepository, IPosterRepository posterRepository) : base(
+            personRepository, posterRepository)
         {
         }
 
@@ -40,10 +42,12 @@ namespace AfterHope.Commands.Executors
             var downloadPosterCommandName = commandSyntax.GetCommandName<DownloadPosterCommandExecutor>();
 
             var lawsuit = command.Args[0];
+            var lawsuitPosters = GetLawsuitPosterIds(lawsuit).ToArray();
             var builder = InlineMenu.Build();
             builder.AddRow().WithCell("Найти другую группу", organizeCommandName);
             builder.AddRow().WithCell("Скачать cписок для печати", downloadListCommandName, lawsuit);
-            builder.AddRow().WithCell("Скачать плакат для печати", downloadPosterCommandName, lawsuit);
+            if (lawsuitPosters.Any())
+                builder.AddRow().WithCell("Скачать плакат для печати", downloadPosterCommandName, lawsuitPosters[0]);
             builder.AddRow().WithCell("В начало", startCommandName);
             return builder.Create();
         }

@@ -9,11 +9,20 @@ namespace AfterHope.Commands.Executors
     public abstract class CommandExecutorBase
     {
         protected readonly IPersonRepository PersonRepository;
+        protected readonly IPosterRepository PosterRepository;
 
-        protected CommandExecutorBase(IPersonRepository personRepository)
+        protected CommandExecutorBase(IPersonRepository personRepository,
+            IPosterRepository posterRepository)
         {
-            this.PersonRepository = personRepository;
+            PersonRepository = personRepository;
+            PosterRepository = posterRepository;
         }
+
+        protected IEnumerable<string> GetLawsuitPosterIds(string lawsuit) =>
+            PosterRepository.SelectByLawsuit(lawsuit).Select(x => x.Id);
+
+        protected IEnumerable<string> GetPersonPosters(string personId) =>
+            PosterRepository.ReadByPersonId(personId).Select(x => x.Id);
 
         protected IEnumerable<string> GetLawsuits(CommandMeta meta) =>
             PersonRepository.ReadAll().GroupBy(x => x.Lawsuit).Select(x => x.Key);

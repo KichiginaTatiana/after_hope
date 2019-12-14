@@ -8,7 +8,8 @@ namespace AfterHope.Commands.Executors
 {
     public class FindCommandExecutor : CommandExecutorBase, ICommandExecutor
     {
-        public FindCommandExecutor(IPersonRepository personRepository) : base(personRepository)
+        public FindCommandExecutor(IPersonRepository personRepository,
+            IPosterRepository posterRepository) : base(personRepository, posterRepository)
         {
         }
 
@@ -41,18 +42,21 @@ namespace AfterHope.Commands.Executors
             var personsString = string.Join("\n", persons.Select((p, i) => $"{i + 1}. {p.Name} /show_{p.Id}"));
 
             return CommandResult.AsSucceed($"Найдено {persons.Count}:\n{personsString}",
-                inlineMenu: CreateMenu(syntax));
+                inlineMenu: CreateMenu(syntax, query));
         }
 
-        private static InlineMenu CreateMenu(ICommandSyntax commandSyntax)
+        private InlineMenu CreateMenu(ICommandSyntax commandSyntax, string lawsuit)
         {
             var startCommandName = commandSyntax.GetCommandName<DefaultStartSuperCommandExecutor>();
             var findCommandName = commandSyntax.GetCommandName<FindCommandExecutor>();
             var downloadPosterCommandName = commandSyntax.GetCommandName<DownloadPosterCommandExecutor>();
 
+            var lawsuitPosters = GetLawsuitPosterIds(lawsuit).ToArray();
+
             var builder = InlineMenu.Build();
             builder.AddRow().WithCell("Найти другого узника совести", findCommandName);
-            builder.AddRow().WithCell("Скачать плакат для печати", downloadPosterCommandName);
+            if(lawsuitPosters.Any())
+            builder.AddRow().WithCell("Скачать плакат для печати", downloadPosterCommandName, lawsuitPosters[0]);
             builder.AddRow().WithCell("В начало", startCommandName);
             return builder.Create();
         }

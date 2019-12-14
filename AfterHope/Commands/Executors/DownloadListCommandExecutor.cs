@@ -9,7 +9,7 @@ namespace AfterHope.Commands.Executors
         private readonly IPersonListExporter exporter;
 
         public DownloadListCommandExecutor(IPersonRepository personRepository,
-            IPersonListExporter exporter) : base(personRepository)
+            IPersonListExporter exporter, IPosterRepository posterRepository) : base(personRepository, posterRepository)
         {
             this.exporter = exporter;
         }
