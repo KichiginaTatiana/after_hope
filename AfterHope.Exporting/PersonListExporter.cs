@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text;
-using AfterHope.Data;
 using AfterHope.Data.Models;
+using AfterHope.Data.Repositories;
 using AfterHope.Exporting.Extensions;
 using AutoMapper;
 using CsvHelper;

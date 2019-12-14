@@ -2,7 +2,7 @@
 using AfterHope.Data.Models;
 using LiteDB;
 
-namespace AfterHope.Data
+namespace AfterHope.Data.Repositories
 {
     public class PersonRepository : IPersonRepository
     {

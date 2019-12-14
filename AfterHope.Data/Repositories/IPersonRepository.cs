@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using AfterHope.Data.Models;
 
-namespace AfterHope.Data
+namespace AfterHope.Data.Repositories
 {
     public interface IPersonRepository
     {

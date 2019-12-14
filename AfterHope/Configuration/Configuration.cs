@@ -1,6 +1,6 @@
 using System.Reflection;
 using AfterHope.Commands.Parsing.Syntax;
-using AfterHope.Data;
+using AfterHope.Data.Repositories;
 using AfterHope.Exporting;
 using Grace.DependencyInjection;
 using Grace.DependencyInjection.Lifestyle;

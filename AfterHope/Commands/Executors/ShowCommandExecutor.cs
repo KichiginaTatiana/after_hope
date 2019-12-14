@@ -1,8 +1,8 @@
 ﻿using System;
 using AfterHope.Commands.Menus.Inline;
 using AfterHope.Commands.Parsing.Syntax;
-using AfterHope.Data;
 using AfterHope.Data.Models;
+using AfterHope.Data.Repositories;
 
 namespace AfterHope.Commands.Executors
 {

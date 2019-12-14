@@ -1,5 +1,5 @@
 ﻿using AfterHope.Commands.Parsing.Syntax;
-using AfterHope.Data;
+using AfterHope.Data.Repositories;
 using AfterHope.Exporting;
 
 namespace AfterHope.Commands.Executors

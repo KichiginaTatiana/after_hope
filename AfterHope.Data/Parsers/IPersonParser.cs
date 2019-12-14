@@ -1,6 +1,6 @@
 ﻿using AfterHope.Data.Models;
 
-namespace AfterHope.Data
+namespace AfterHope.Data.Parsers
 {
     public interface IPersonParser
     {
