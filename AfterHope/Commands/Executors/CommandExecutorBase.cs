@@ -2,7 +2,7 @@
 using System.Linq;
 using AfterHope.Commands.Menus.Inline;
 using AfterHope.Commands.Parsing.Syntax;
-using AfterHope.Storing;
+using AfterHope.Data;
 
 namespace AfterHope.Commands.Executors
 {

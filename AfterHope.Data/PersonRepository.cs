@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using AfterHope.Storing.Data;
+using AfterHope.Data.Models;
 using LiteDB;
 
-namespace AfterHope.Storing
+namespace AfterHope.Data
 {
     public class PersonRepository : IPersonRepository
     {
@@ -37,6 +37,9 @@ namespace AfterHope.Storing
 
         public List<Person> Select(string query) => ReadAll();
         // repository.Fetch<Person>(x => x.Name.Contains(query));
+
+        public List<Person> SelectByLawsuit(string lawsuit) => ReadAll();
+        //repository.Fetch<Person>(x => x.Lawsuit.Contains(query));
 
         public List<Person> ReadAll() => new List<Person>()
         {

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using AfterHope.Commands;
 using MihaZupan;
@@ -66,12 +67,18 @@ namespace AfterHope.BotService
                         replyMarkup: inlineKeyboardMarkupBuilder.Build(commandResult.InlineMenu));
                 }
                 else
-                    await bot.SendTextMessageAsync(
-                        callbackQuery.Message.Chat.Id,
-                        commandResult.Success ? commandResult.Response : commandResult.ErrorMessage,
-                        commandResult.UseMarkdown ? ParseMode.Markdown : ParseMode.Default,
-                        replyMarkup: inlineKeyboardMarkupBuilder.Build(commandResult.InlineMenu)
-                    );
+                {
+                    if (commandResult.IsDocumentResult)
+                        await bot.SendDocumentAsync(callbackQuery.Message.Chat.Id,
+                            new InputMedia(new MemoryStream(commandResult.FileContent), commandResult.FileName));
+                    else
+                        await bot.SendTextMessageAsync(
+                            callbackQuery.Message.Chat.Id,
+                            commandResult.Success ? commandResult.Response : commandResult.ErrorMessage,
+                            commandResult.UseMarkdown ? ParseMode.Markdown : ParseMode.Default,
+                            replyMarkup: inlineKeyboardMarkupBuilder.Build(commandResult.InlineMenu)
+                        );
+                }
             }
             catch (Exception e)
             {
@@ -105,12 +112,15 @@ namespace AfterHope.BotService
                 {
                     var commandResult = commandManager.Execute(message.Text, commandMeta);
 
-                    await bot.SendTextMessageAsync(
-                        message.Chat.Id,
-                        commandResult.Success ? commandResult.Response : commandResult.ErrorMessage,
-                        commandResult.UseMarkdown ? ParseMode.Markdown : ParseMode.Default,
-                        replyMarkup: inlineKeyboardMarkupBuilder.Build(commandResult.InlineMenu)
-                    );
+                    if (commandResult.IsDocumentResult)
+                        await bot.SendDocumentAsync(message.Chat.Id,
+                            new InputMedia(new MemoryStream(commandResult.FileContent), commandResult.FileName));
+                    else
+                        await bot.SendTextMessageAsync(
+                            message.Chat.Id,
+                            commandResult.Success ? commandResult.Response : commandResult.ErrorMessage,
+                            commandResult.UseMarkdown ? ParseMode.Markdown : ParseMode.Default,
+                            replyMarkup: inlineKeyboardMarkupBuilder.Build(commandResult.InlineMenu));
                 }
                 catch (Exception e)
                 {
