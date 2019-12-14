@@ -27,7 +27,7 @@ namespace AfterHope.Commands.Executors
         }
 
         private CommandResult Start(CommandMeta meta, ICommandSyntax syntax) =>
-            CommandResult.AsSucceed("Отправьте боту фамилию узника совести или смотри список по делам",
+            CommandResult.AsSucceed("Отправьте боту фамилию узника совести или посмотрите список по делам",
                 inlineMenu: CreateLawsuitsMenu(syntax, GetLawsuits(meta)),
                 update: meta.FromInlineMenu);
 
