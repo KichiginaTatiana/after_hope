@@ -42,7 +42,8 @@ namespace AfterHope.Commands.Executors
             var personsString = string.Join("\n", persons.Select((p, i) => $"{i + 1}. {p.Name} /show_{p.Id}"));
 
             return CommandResult.AsSucceed($"Найдено {persons.Count}:\n{personsString}",
-                inlineMenu: CreateMenu(syntax, query));
+                inlineMenu: CreateMenu(syntax, query),
+                update: meta.FromInlineMenu);
         }
 
         private InlineMenu CreateMenu(ICommandSyntax commandSyntax, string lawsuit)
